@@ -4,6 +4,7 @@ import argparse
 import datetime
 import httplib
 import json
+import sys
 
 from lib.texttable import texttable
 
@@ -13,6 +14,8 @@ def main(args=None):
                       help="create <n> sleep jobs (default: 1)")
   parser.add_argument("--delete", metavar="<jobname>",
                       help="delete job with name <jobname>")
+  parser.add_argument("--deleteall", action="store_true",
+                      help="delete all jobs (this is serious business)")
   parser.add_argument("--list", action="store_true", help="list all jobs")
 
   # If called as a standalone file, `args` will be None. If called from the
@@ -52,6 +55,23 @@ def main(args=None):
       print "Deleted job named '%s'." % args.delete
     else:
       print "Job named '%s' does not exist. No jobs were deleted." % args.delete
+  elif args.deleteall:
+    sys.stdout.write("Are you sure you want to delete ALL jobs? [yes/No] ")
+    choice = raw_input()
+    if choice == "yes":
+      connection = httplib.HTTPConnection("localhost:8080")
+      connection.request("GET", "/scheduler/jobs")
+      response = connection.getresponse().read()
+
+      jobs = json.loads(response)
+      for job in jobs:
+        connection.request("DELETE", "/scheduler/job/%s" % job["name"])
+        connection.getresponse().read()
+
+      connection.close()
+      print "Deleted ALL jobs. The slate is all clean."
+    else:
+      print "Deletion must be confirmed with 'yes'. No jobs were deleted."
   elif args.list != None:
     connection = httplib.HTTPConnection("localhost:8080")
     connection.request("GET", "/scheduler/jobs")
