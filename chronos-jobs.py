@@ -9,7 +9,7 @@ import sys
 from lib.texttable import texttable
 
 def main(args=None):
-  parser = argparse.ArgumentParser(prog="chronos-job")
+  parser = argparse.ArgumentParser(prog="chronos-jobs")
   parser.add_argument("--hostname", default="localhost:8080", metavar="<host:port>",
                       help="hostname of the Chronos instance")
 
