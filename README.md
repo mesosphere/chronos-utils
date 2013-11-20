@@ -13,7 +13,7 @@ to the command description in this file.
 usage: chronos [-h] <command>
 
 Supported chronos commands are:
-  job    Create dummy jobs
+  job    Create and destroy jobs
 
 positional arguments:
   <command>   this is it, the command to execute
@@ -24,13 +24,14 @@ optional arguments:
 
 ### chronos-job.py
 
-Generate dummy sleep jobs on a local Chronos instance for testing purposes.
+Create and destroy jobs
 
 ```
 ./chronos.py job -h
-usage: chronos-job [-h] [-n N]
+usage: chronos-job [-h] [--create <n>] [--delete <jobname>]
 
 optional arguments:
-  -h, --help  show this help message and exit
-  -n N        number of Chronos jobs to create (default: 1)
+  -h, --help          show this help message and exit
+  --create <n>        create <n> sleep jobs (default: 1)
+  --delete <jobname>  delete job with name <jobname>
 ```
