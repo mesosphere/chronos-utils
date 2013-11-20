@@ -9,7 +9,7 @@ from lib.texttable import texttable
 
 def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-job")
-  parser.add_argument("--create", metavar="<n>", type=int,
+  parser.add_argument("--create", const=1, metavar="<n>", nargs="?", type=int,
                       help="create <n> sleep jobs (default: 1)")
   parser.add_argument("--delete", metavar="<jobname>",
                       help="delete job with name <jobname>")
