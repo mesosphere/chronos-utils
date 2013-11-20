@@ -3,6 +3,11 @@ chronos-utils
 
 Command line utilities for interacting with Chronos
 
+### chronos.py
+
+Forward commands to other files in the directory. New commands should be added
+to the command description in this file.
+
 ```
 ./chronos.py -h
 usage: chronos.py [-h]
