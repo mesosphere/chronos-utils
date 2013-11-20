@@ -28,11 +28,13 @@ Create, destroy, and list jobs
 
 ```
 ./chronos.py jobs -h
-usage: chronos-job [-h] [--create <n>] [--delete <jobname>] [--list]
+usage: chronos-job [-h] [--create [<n>]] [--delete <jobname>] [--deleteall]
+                   [--list]
 
 optional arguments:
   -h, --help          show this help message and exit
-  --create <n>        create <n> sleep jobs (default: 1)
+  --create [<n>]      create <n> sleep jobs (default: 1)
   --delete <jobname>  delete job with name <jobname>
+  --deleteall         delete all jobs (this is serious business)
   --list              list all jobs
 ```
