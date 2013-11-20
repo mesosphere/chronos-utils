@@ -23,7 +23,7 @@ Supported chronos commands are:
     exit(1)
 
   command = getattr(command_namespace, "main")
-  command(args)
+  command(getattr(args, "args"))
 
 if __name__ == "__main__":
   main()
