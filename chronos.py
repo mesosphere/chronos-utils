@@ -6,7 +6,7 @@ def main():
   parser = argparse.ArgumentParser(
     description='''
 Supported chronos commands are:
-    job    Create dummy jobs
+  job    Create dummy jobs
 ''',
     formatter_class=argparse.RawDescriptionHelpFormatter,
     prog="chronos")
