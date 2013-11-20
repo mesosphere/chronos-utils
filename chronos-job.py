@@ -5,32 +5,52 @@ import datetime
 import httplib
 import json
 
-def main(args):
+def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-job")
-  parser.add_argument("-n", default=1, type=int,
-                      help="number of Chronos jobs to create (default: 1)")
-  args = parser.parse_args()
+  parser.add_argument("--create", metavar="<n>", type=int,
+                      help="create <n> sleep jobs (default: 1)")
+  parser.add_argument("--delete", metavar="<jobname>",
+                      help="delete job with name <jobname>")
 
-  payload = {
-    "async": False,
-    "command": "sleep 50",
-    "disabled": False,
-    "executor": "",
-    "epsilon": "PT15M",
-    "owner": "rob@fake.com"
-  }
-  headers = {"Content-type": "application/json"}
+  # If called as a standalone file, `args` will be None. If called from the
+  # chronos.py dispatcher, `args` will be the remainder options passed to
+  # the top-level chronos.py call
+  args = parser.parse_args(args)
 
-  for i in range(args.n):
-    now = datetime.datetime.utcnow()
-    payload["name"] = "JOB%i" % ((now - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
-    payload["schedule"] = "R/%s/PT24H" % now.isoformat()
+  if args.create != None:
+    payload = {
+      "async": False,
+      "command": "sleep 50",
+      "disabled": False,
+      "executor": "",
+      "epsilon": "PT15M",
+      "owner": "rob@fake.com"
+    }
+    headers = {"Content-type": "application/json"}
 
+    for i in range(args.create):
+      now = datetime.datetime.utcnow()
+      payload["name"] = "JOB%i" % ((now - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
+      payload["schedule"] = "R/%s/PT24H" % now.isoformat()
+
+      connection = httplib.HTTPConnection("localhost:8080")
+      connection.request("POST", "/scheduler/iso8601", json.dumps(payload), headers)
+      connection.close()
+
+    print "Created %i job(s) on local Chronos" % args.create
+  elif args.delete != None:
     connection = httplib.HTTPConnection("localhost:8080")
-    connection.request("POST", "/scheduler/iso8601", json.dumps(payload), headers)
+    connection.request("DELETE", "/scheduler/job/%s" % args.delete)
+    response = connection.getresponse()
     connection.close()
 
-  print "Created %i job(s) on local Chronos" % args.n
+    if response.status >= 200 and response.status < 300:
+      print "Deleted job named '%s'." % args.delete
+    else:
+      print "Job named '%s' does not exist. No jobs were deleted." % args.delete
+
+  else:
+    print "Nothing happened. Call one of the actions. Try 'chronos job -h'."
 
 if __name__ == "__main__":
   main()
