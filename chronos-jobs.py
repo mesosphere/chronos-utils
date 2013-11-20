@@ -11,7 +11,7 @@ from lib.texttable import texttable
 def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-jobs")
   parser.add_argument("--hostname", default="localhost:8080", metavar="<host:port>",
-                      help="hostname of the Chronos instance")
+                      help="hostname and port of the Chronos instance (default: localhost:8080)")
 
   # Exactly one of the following arguments must be present. These are the
   # commands supported by chronos-jobs.

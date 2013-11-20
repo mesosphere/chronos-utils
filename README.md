@@ -34,7 +34,8 @@ usage: chronos-jobs [-h] [--hostname <host:port>]
 optional arguments:
   -h, --help            show this help message and exit
   --hostname <host:port>
-                        hostname of the Chronos instance
+                        hostname and port of the Chronos instance (default:
+                        localhost:8080)
   --create [<n>]        create <n> sleep jobs (default: 1)
   --delete <jobname>    delete job with name <jobname>
   --deleteall           delete all jobs (this is serious business)
