@@ -1,7 +1,8 @@
 chronos-utils
 =============
 
-Command line utilities for interacting with Chronos
+Command line utilities for interacting with
+[Airbnb Chronos](https://github.com/airbnb/chronos).
 
 ### `chronos`
 
