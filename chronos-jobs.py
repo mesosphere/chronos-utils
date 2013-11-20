@@ -12,6 +12,8 @@ def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-jobs")
   parser.add_argument("--hostname", default="localhost:8080", metavar="<host:port>",
                       help="hostname and port of the Chronos instance (default: localhost:8080)")
+  parser.add_argument("-v", action="store_true", default=False,
+                      help="print verbose output for commands that support it")
 
   # Exactly one of the following arguments must be present. These are the
   # commands supported by chronos-jobs.
@@ -86,10 +88,21 @@ def main(args=None):
 
     jobs = json.loads(response)
 
-    table = texttable.Texttable()
-    rows = [["Name", "Owner", "Schedule"]]
+    table = texttable.Texttable(max_width=False)
+    if args.v:
+      headers = ["Name", "Owner", "Schedule", "Epsilon", "Retries", "Command"]
+    else:
+      headers = ["Name", "Owner", "Schedule"]
+
+    rows = [headers]
     for job in jobs:
-      rows.append([job["name"], job["owner"], job["schedule"]])
+      if args.v:
+        values = [job["name"], job["owner"], job["schedule"], job["epsilon"],
+          job["retries"], job["command"]]
+      else:
+        values = [job["name"], job["owner"], job["schedule"]]
+
+      rows.append(values)
 
     table.add_rows(rows)
     print table.draw()
