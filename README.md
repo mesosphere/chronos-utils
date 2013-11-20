@@ -3,7 +3,7 @@ chronos-utils
 
 Command line utilities for interacting with Chronos
 
-### chronos.py
+### `chronos`
 
 Forward commands to other files in the directory. New commands should be added
 to the command description in this file.
@@ -22,7 +22,7 @@ optional arguments:
   -h, --help  show this help message and exit
 ```
 
-### chronos-job.py
+### `chronos-jobs`
 
 Create, destroy, and list jobs
 
