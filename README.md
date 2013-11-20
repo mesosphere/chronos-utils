@@ -28,13 +28,15 @@ Create, destroy, and list jobs
 
 ```
 ./chronos.py jobs -h
-usage: chronos-job [-h] [--create [<n>]] [--delete <jobname>] [--deleteall]
-                   [--list]
+usage: chronos-job [-h] [--hostname <host:port>]
+                   (--create [<n>] | --delete <jobname> | --deleteall | --list)
 
 optional arguments:
-  -h, --help          show this help message and exit
-  --create [<n>]      create <n> sleep jobs (default: 1)
-  --delete <jobname>  delete job with name <jobname>
-  --deleteall         delete all jobs (this is serious business)
-  --list              list all jobs
+  -h, --help            show this help message and exit
+  --hostname <host:port>
+                        hostname of the Chronos instance
+  --create [<n>]        create <n> sleep jobs (default: 1)
+  --delete <jobname>    delete job with name <jobname>
+  --deleteall           delete all jobs (this is serious business)
+  --list                list all jobs
 ```
