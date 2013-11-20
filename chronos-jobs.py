@@ -87,7 +87,12 @@ def main(args=None):
 
     table.add_rows(rows)
     print table.draw()
-    print "\nShowing all %i jobs" % len(rows)
+
+    jobs_length = len(jobs)
+    if jobs_length == 0:
+      print "\nNo jobs"
+    else:
+      print "\nShowing all %i job(s)" % len(jobs)
   else:
     print "Nothing happened. Call one of the actions. Try 'chronos job -h'."
 
