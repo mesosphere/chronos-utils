@@ -31,15 +31,16 @@ def main(args=None):
     }
     headers = {"Content-type": "application/json"}
 
+    connection = httplib.HTTPConnection("localhost:8080")
     for i in range(args.create):
       now = datetime.datetime.utcnow()
       payload["name"] = "JOB%i" % ((now - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
       payload["schedule"] = "R/%s/PT24H" % now.isoformat()
 
-      connection = httplib.HTTPConnection("localhost:8080")
       connection.request("POST", "/scheduler/iso8601", json.dumps(payload), headers)
-      connection.close()
+      connection.getresponse().read()
 
+    connection.close()
     print "Created %i job(s) on local Chronos" % args.create
   elif args.delete != None:
     connection = httplib.HTTPConnection("localhost:8080")
