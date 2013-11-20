@@ -10,13 +10,19 @@ from lib.texttable import texttable
 
 def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-job")
-  parser.add_argument("--create", const=1, metavar="<n>", nargs="?", type=int,
+  parser.add_argument("--hostname", default="localhost:8080", metavar="<host:port>",
+                      help="hostname of the Chronos instance")
+
+  # Exactly one of the following arguments must be present. These are the
+  # commands supported by chronos-jobs.
+  group = parser.add_mutually_exclusive_group(required=True)
+  group.add_argument("--create", const=1, metavar="<n>", nargs="?", type=int,
                       help="create <n> sleep jobs (default: 1)")
-  parser.add_argument("--delete", metavar="<jobname>",
+  group.add_argument("--delete", metavar="<jobname>",
                       help="delete job with name <jobname>")
-  parser.add_argument("--deleteall", action="store_true",
+  group.add_argument("--deleteall", action="store_true",
                       help="delete all jobs (this is serious business)")
-  parser.add_argument("--list", action="store_true", help="list all jobs")
+  group.add_argument("--list", action="store_true", help="list all jobs")
 
   # If called as a standalone file, `args` will be None. If called from the
   # chronos.py dispatcher, `args` will be the remainder options passed to
@@ -34,7 +40,7 @@ def main(args=None):
     }
     headers = {"Content-type": "application/json"}
 
-    connection = httplib.HTTPConnection("localhost:8080")
+    connection = httplib.HTTPConnection(args.hostname)
     for i in range(args.create):
       now = datetime.datetime.utcnow()
       payload["name"] = "JOB%i" % ((now - datetime.datetime.utcfromtimestamp(0)).total_seconds() * 1000)
@@ -46,7 +52,7 @@ def main(args=None):
     connection.close()
     print "Created %i job(s) on local Chronos" % args.create
   elif args.delete != None:
-    connection = httplib.HTTPConnection("localhost:8080")
+    connection = httplib.HTTPConnection(args.hostname)
     connection.request("DELETE", "/scheduler/job/%s" % args.delete)
     response = connection.getresponse()
     connection.close()
@@ -59,7 +65,7 @@ def main(args=None):
     sys.stdout.write("Are you sure you want to delete ALL jobs? [yes/No] ")
     choice = raw_input()
     if choice == "yes":
-      connection = httplib.HTTPConnection("localhost:8080")
+      connection = httplib.HTTPConnection(args.hostname)
       connection.request("GET", "/scheduler/jobs")
       response = connection.getresponse().read()
 
@@ -73,7 +79,7 @@ def main(args=None):
     else:
       print "Deletion must be confirmed with 'yes'. No jobs were deleted."
   elif args.list != None:
-    connection = httplib.HTTPConnection("localhost:8080")
+    connection = httplib.HTTPConnection(args.hostname)
     connection.request("GET", "/scheduler/jobs")
     response = connection.getresponse().read()
     connection.close()
