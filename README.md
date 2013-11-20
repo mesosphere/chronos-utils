@@ -10,10 +10,13 @@ to the command description in this file.
 
 ```
 ./chronos.py -h
-usage: chronos.py [-h]
+usage: chronos [-h] <command>
 
 Supported chronos commands are:
     job    Create dummy jobs
+
+positional arguments:
+  <command>   this is it, the command to execute
 
 optional arguments:
   -h, --help  show this help message and exit

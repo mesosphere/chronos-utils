@@ -8,8 +8,9 @@ def main():
 Supported chronos commands are:
     job    Create dummy jobs
 ''',
-    formatter_class=argparse.RawDescriptionHelpFormatter)
-  parser.add_argument("<command>", help=argparse.SUPPRESS)
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    prog="chronos")
+  parser.add_argument("<command>", help="this is it, the command to execute")
   parser.add_argument("args", help=argparse.SUPPRESS, nargs=argparse.REMAINDER)
   args = parser.parse_args()
 
