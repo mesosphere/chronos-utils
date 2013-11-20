@@ -5,12 +5,15 @@ import datetime
 import httplib
 import json
 
+from lib.texttable import texttable
+
 def main(args=None):
   parser = argparse.ArgumentParser(prog="chronos-job")
   parser.add_argument("--create", metavar="<n>", type=int,
                       help="create <n> sleep jobs (default: 1)")
   parser.add_argument("--delete", metavar="<jobname>",
                       help="delete job with name <jobname>")
+  parser.add_argument("--list", action="store_true", help="list all jobs")
 
   # If called as a standalone file, `args` will be None. If called from the
   # chronos.py dispatcher, `args` will be the remainder options passed to
@@ -48,7 +51,22 @@ def main(args=None):
       print "Deleted job named '%s'." % args.delete
     else:
       print "Job named '%s' does not exist. No jobs were deleted." % args.delete
+  elif args.list != None:
+    connection = httplib.HTTPConnection("localhost:8080")
+    connection.request("GET", "/scheduler/jobs")
+    response = connection.getresponse().read()
+    connection.close()
 
+    jobs = json.loads(response)
+
+    table = texttable.Texttable()
+    rows = [["Name", "Owner", "Schedule"]]
+    for job in jobs:
+      rows.append([job["name"], job["owner"], job["schedule"]])
+
+    table.add_rows(rows)
+    print table.draw()
+    print "\nShowing all %i jobs" % len(rows)
   else:
     print "Nothing happened. Call one of the actions. Try 'chronos job -h'."
 
