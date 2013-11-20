@@ -13,7 +13,7 @@ to the command description in this file.
 usage: chronos [-h] <command>
 
 Supported chronos commands are:
-  job    Create and destroy jobs
+  jobs   Create, destroy, and list jobs
 
 positional arguments:
   <command>   this is it, the command to execute
