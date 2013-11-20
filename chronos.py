@@ -1,0 +1,28 @@
+#! /usr/bin/env python
+
+import argparse
+
+def main():
+  parser = argparse.ArgumentParser(
+    description='''
+Supported chronos commands are:
+    job    Create dummy jobs
+''',
+    formatter_class=argparse.RawDescriptionHelpFormatter)
+  parser.add_argument("<command>", help=argparse.SUPPRESS)
+  parser.add_argument("args", help=argparse.SUPPRESS, nargs=argparse.REMAINDER)
+  args = parser.parse_args()
+
+  command_name = getattr(args, "<command>")
+
+  try:
+    command_namespace = __import__("chronos-%s" % command_name)
+  except ImportError:
+    print "'%s' is not a chronos command. Try 'chronos -h'." % command_name
+    exit(1)
+
+  command = getattr(command_namespace, "main")
+  command(args)
+
+if __name__ == "__main__":
+  main()
