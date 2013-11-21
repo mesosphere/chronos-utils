@@ -27,6 +27,8 @@ def main(args=None):
   group.add_argument("--list", action="store_true", help="list all jobs")
   group.add_argument("--run", metavar="<jobname>",
                       help="run job with name <jobname>")
+  group.add_argument("--runall", action="store_true",
+                      help="run all jobs (could be a lot of work)")
 
   # If called as a standalone file, `args` will be None. If called from the
   # chronos.py dispatcher, `args` will be the remainder options passed to
@@ -124,6 +126,23 @@ def main(args=None):
       print "Force ran job '%s'." % args.run
     else:
       print "Job named '%s' does not exist. No jobs were run." % args.run
+  elif args.runall:
+    sys.stdout.write("Are you sure you want to run ALL jobs? [yes/No] ")
+    choice = raw_input()
+    if choice == "yes":
+      connection = httplib.HTTPConnection(args.hostname)
+      connection.request("GET", "/scheduler/jobs")
+      response = connection.getresponse().read()
+
+      jobs = json.loads(response)
+      for job in jobs:
+        connection.request("PUT", "/scheduler/job/%s" % job["name"])
+        connection.getresponse().read()
+
+      connection.close()
+      print "Ran ALL jobs. Watch out, that's a lot of work."
+    else:
+      print "Running all jobs must be confirmed with 'yes'. No jobs were run."
 
 if __name__ == "__main__":
   main()
