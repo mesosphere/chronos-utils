@@ -13,7 +13,7 @@ def main(args=None):
   parser.add_argument("--hostname", default="localhost:8080", metavar="<host:port>",
                       help="hostname and port of the Chronos instance (default: localhost:8080)")
   parser.add_argument("-v", action="store_true", default=False,
-                      help="print verbose output for commands that support it")
+                      help="print verbose output")
 
   # Exactly one of the following arguments must be present. These are the
   # commands supported by chronos-jobs.
