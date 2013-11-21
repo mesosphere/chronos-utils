@@ -30,7 +30,7 @@ Create, destroy, and list jobs
 ```
 ./chronos.py jobs -h
 usage: chronos-jobs [-h] [--hostname <host:port>] [-v]
-                    (--create [<n>] | --delete <jobname> | --deleteall | --list)
+                    (--create [<n>] | --delete <jobname> | --deleteall | --list | --run <jobname> | --runall)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -42,4 +42,6 @@ optional arguments:
   --delete <jobname>    delete job with name <jobname>
   --deleteall           delete all jobs (this is serious business)
   --list                list all jobs
+  --run <jobname>       run job with name <jobname>
+  --runall              run all jobs (could be a lot of work)
 ```
