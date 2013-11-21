@@ -25,6 +25,8 @@ def main(args=None):
   group.add_argument("--deleteall", action="store_true",
                       help="delete all jobs (this is serious business)")
   group.add_argument("--list", action="store_true", help="list all jobs")
+  group.add_argument("--run", metavar="<jobname>",
+                      help="run job with name <jobname>")
 
   # If called as a standalone file, `args` will be None. If called from the
   # chronos.py dispatcher, `args` will be the remainder options passed to
@@ -59,7 +61,7 @@ def main(args=None):
     response = connection.getresponse()
     connection.close()
 
-    if response.status >= 200 and response.status < 300:
+    if 200 <= response.status < 300:
       print "Deleted job named '%s'." % args.delete
     else:
       print "Job named '%s' does not exist. No jobs were deleted." % args.delete
@@ -112,8 +114,16 @@ def main(args=None):
       print "\nNo jobs"
     else:
       print "\nShowing all %i job(s)" % len(jobs)
-  else:
-    print "Nothing happened. Call one of the actions. Try 'chronos job -h'."
+  elif args.run != None:
+    connection = httplib.HTTPConnection(args.hostname)
+    connection.request("PUT", "/scheduler/job/%s" % args.run)
+    response = connection.getresponse()
+    connection.close()
+
+    if 200 <= response.status < 300:
+      print "Force ran job '%s'." % args.run
+    else:
+      print "Job named '%s' does not exist. No jobs were run." % args.run
 
 if __name__ == "__main__":
   main()
