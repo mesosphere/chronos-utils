@@ -80,7 +80,7 @@ def main(args=None):
       print "Deleted ALL jobs. The slate is all clean."
     else:
       print "Deletion must be confirmed with 'yes'. No jobs were deleted."
-  elif args.list != None:
+  elif args.list:
     connection = httplib.HTTPConnection(args.hostname)
     connection.request("GET", "/scheduler/jobs")
     response = connection.getresponse().read()
