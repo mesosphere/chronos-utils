@@ -2,7 +2,55 @@ chronos-utils
 =============
 
 Command line utilities for interacting with
-[Airbnb Chronos](https://github.com/airbnb/chronos).
+[Airbnb Chronos](https://github.com/airbnb/chronos). Check out the [full reference](#full-reference) below for all available commands.
+
+## First, a demonstration
+
+This demonstrates creating jobs, deleting a single job, deleting all the jobs, and listing jobs from the command line.
+
+    $ ./chronos.py jobs --create 3
+    Created 3 job(s) on local Chronos
+
+    $ ./chronos.py jobs --lists
+    +------------------+--------------+------------------------------------+
+    |       Name       |    Owner     |              Schedule              |
+    +==================+==============+====================================+
+    | JOB1386714810695 | rob@fake.com | R/2013-12-10T22:33:30.695273/PT24H |
+    +------------------+--------------+------------------------------------+
+    | JOB1386714810719 | rob@fake.com | R/2013-12-10T22:33:30.719465/PT24H |
+    +------------------+--------------+------------------------------------+
+    | JOB1386714810737 | rob@fake.com | R/2013-12-10T22:33:30.737307/PT24H |
+    +------------------+--------------+------------------------------------+
+
+    Showing all 3 job(s)
+
+    $ ./chronos.py jobs --delete JOB1386714810719
+    Deleted job named 'JOB1386714810719'.
+
+    $ ./chronos.py jobs --list
+    +------------------+--------------+------------------------------------+
+    |       Name       |    Owner     |              Schedule              |
+    +==================+==============+====================================+
+    | JOB1386714810695 | rob@fake.com | R/2013-12-10T22:33:30.695273/PT24H |
+    +------------------+--------------+------------------------------------+
+    | JOB1386714810737 | rob@fake.com | R/2013-12-10T22:33:30.737307/PT24H |
+    +------------------+--------------+------------------------------------+
+
+    Showing all 2 job(s)
+
+    $ ./chronos.py jobs --deleteall
+    Are you sure you want to delete ALL jobs? [yes/No] yes
+    Deleted ALL jobs. The slate is all clean.
+
+    $ ./chronos.py jobs --list
+    +------+-------+----------+
+    | Name | Owner | Schedule |
+    +======+=======+==========+
+    +------+-------+----------+
+
+    No jobs
+
+## Full Reference
 
 ### `chronos`
 
