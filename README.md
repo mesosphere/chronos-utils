@@ -62,7 +62,8 @@ to the command description in this file.
 usage: chronos [-h] <command>
 
 Supported chronos commands are:
-  jobs   Create, destroy, and list jobs
+  jobs      Create, destroy, and list jobs
+  version   Print the chronos utils version
 
 positional arguments:
   <command>   this is it, the command to execute
