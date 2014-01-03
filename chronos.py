@@ -6,7 +6,8 @@ def main():
   parser = argparse.ArgumentParser(
     description='''
 Supported chronos commands are:
-  jobs   Create, destroy, and list jobs
+  jobs      Create, destroy, and list jobs
+  version   Print the chronos utils version
 ''',
     formatter_class=argparse.RawDescriptionHelpFormatter,
     prog="chronos")
