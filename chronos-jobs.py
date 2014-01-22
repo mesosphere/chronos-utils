@@ -78,16 +78,21 @@ def main(args=None):
     for i in range(args.createforest):
       payload = dict(static_payload) # Create a copy
       payload["name"] = "DEPENDENTJOB%i" % i
-      payload["parents"] = []
-      # With probability p2, this node will have two parents selected at random from the list of completed payloads.
       if random.random() < p2 and i > 2:
+        # With probability p2, this node will have two parents selected at random from the list of completed payloads.
         payload["parents"] = [obj['name'] for obj in random.sample(payloads, 2)]
-      # With probability p1, this node will have a single parent selected at random from the list of completed payloads.
+        url = "/scheduler/dependency"
       elif random.random() < p1 and i > 1:
+        # With probability p1, this node will have a single parent selected at random from the list of completed payloads.
         payload["parents"] = [obj['name'] for obj in random.sample(payloads, 1)]
+        url = "/scheduler/dependency"
+      else:
+        # This job is a root job with no parents, so it must be scheduled.
+        payload["schedule"] = "R/%s/PT24H" % now.isoformat()
+        url = "/scheduler/iso8601"
 
       payloads.append(payload)
-      connection.request("POST", "/scheduler/dependency", json.dumps(payload), headers)
+      connection.request("POST", url, json.dumps(payload), headers)
       connection.getresponse().read()
     connection.close()
     print "Created %i dependent job(s) on local Chronos" % args.createforest
