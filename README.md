@@ -11,7 +11,7 @@ This demonstrates creating jobs, deleting a single job, deleting all the jobs, a
     $ ./chronos.py jobs --create 3
     Created 3 job(s) on local Chronos
 
-    $ ./chronos.py jobs --lists
+    $ ./chronos.py jobs --list
     +------------------+--------------+------------------------------------+
     |       Name       |    Owner     |              Schedule              |
     +==================+==============+====================================+
