@@ -79,7 +79,7 @@ Create, destroy, and list jobs
 ```
 ./chronos.py jobs -h
 usage: chronos-jobs [-h] [--hostname <host:port>] [-v]
-                    (--create [<n>] | --delete <jobname> | --deleteall | --list | --run <jobname> | --runall)
+                    (--create [<n>] | --createforest [<n>] | --delete <jobname> | --deleteall | --list | --run <jobname> | --runall)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -88,6 +88,8 @@ optional arguments:
                         localhost:8080)
   -v                    print verbose output
   --create [<n>]        create <n> sleep jobs (default: 1)
+  --createforest [<n>]  create <n> sleep jobs, with random dependencies
+                        (default: 1)
   --delete <jobname>    delete job with name <jobname>
   --deleteall           delete all jobs (this is serious business)
   --list                list all jobs
