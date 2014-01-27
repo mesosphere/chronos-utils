@@ -5,6 +5,7 @@ import datetime
 import httplib
 import json
 import sys
+import random
 
 from lib.texttable import texttable
 
@@ -20,6 +21,8 @@ def main(args=None):
   group = parser.add_mutually_exclusive_group(required=True)
   group.add_argument("--create", const=1, metavar="<n>", nargs="?", type=int,
                       help="create <n> sleep jobs (default: 1)")
+  group.add_argument("--createforest", const=1, metavar="<n>", nargs="?", type=int,
+                      help="create <n> sleep jobs, with random dependencies (default: 1)")
   group.add_argument("--delete", metavar="<jobname>",
                       help="delete job with name <jobname>")
   group.add_argument("--deleteall", action="store_true",
@@ -57,6 +60,48 @@ def main(args=None):
 
     connection.close()
     print "Created %i job(s) on local Chronos" % args.create
+
+  elif args.createforest != None:
+    p1 = 0.6
+    p2 = 0.2
+    available_parents = 0
+    static_payload = {
+      "async": False,
+      "command": "sleep 50",
+      "disabled": False,
+      "executor": "",
+      "epsilon": "PT15M",
+      "owner": "rob@fake.com"
+    }
+    headers = {"Content-type": "application/json"}
+    connection = httplib.HTTPConnection(args.hostname)
+    payloads = []
+    for i in range(args.createforest):
+      payload = dict(static_payload) # Create a copy
+      payload["name"] = "DEPENDENTJOB%i" % i
+      if random.random() < p2 and available_parents > 2:
+        # With probability p2, this node will have two parents selected at random from the list of completed payloads.
+        payload["parents"] = [obj['name'] for obj in random.sample(payloads, 2)]
+        available_parents += 1
+        url = "/scheduler/dependency"
+      elif random.random() < p1 and available_parents > 1:
+        # With probability p1, this node will have a single parent selected at random from the list of completed payloads.
+        payload["parents"] = [obj['name'] for obj in random.sample(payloads, 1)]
+        available_parents += 1
+        url = "/scheduler/dependency"
+      else:
+        # This job is a root job with no parents, so it must be scheduled.
+        now = datetime.datetime.utcnow()
+        available_parents += 1
+        payload["schedule"] = "R/%s/PT24H" % now.isoformat()
+        url = "/scheduler/iso8601"
+
+      payloads.append(payload)
+      connection.request("POST", url, json.dumps(payload), headers)
+      connection.getresponse().read()
+    connection.close()
+    print "Created %i dependent job(s) on local Chronos" % args.createforest
+
   elif args.delete != None:
     connection = httplib.HTTPConnection(args.hostname)
     connection.request("DELETE", "/scheduler/job/%s" % args.delete)
