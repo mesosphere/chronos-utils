@@ -4,8 +4,8 @@ import argparse
 import datetime
 import httplib
 import json
-import sys
 import random
+import sys
 
 from lib.texttable import texttable
 
